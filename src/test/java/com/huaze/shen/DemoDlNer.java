@@ -1,8 +1,8 @@
 package com.huaze.shen;
 
-import dl.lexical.Entity;
-import dl.lexical.ModelLoader;
-import dl.lexical.LexicalAnalyzer;
+import com.huaze.shen.dl.lexical.Entity;
+import com.huaze.shen.dl.lexical.ModelLoader;
+import com.huaze.shen.dl.lexical.LexicalAnalyzer;
 
 import java.util.ArrayList;
 import java.util.List;

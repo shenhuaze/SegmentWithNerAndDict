@@ -1,7 +1,7 @@
 package com.huaze.shen;
 
-import dl.lexical.Word;
-import ml.seg.DictSeg;
+import com.huaze.shen.dl.lexical.Word;
+import com.huaze.shen.ml.seg.DictSeg;
 
 import java.util.List;
 

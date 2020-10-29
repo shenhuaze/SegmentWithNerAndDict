@@ -1,11 +1,11 @@
 package com.huaze.shen;
 
-import dl.lexical.Entity;
-import dl.lexical.ModelLoader;
-import dl.lexical.LexicalAnalyzer;
-import dl.lexical.Word;
-import ml.pos.PosTag;
-import ml.seg.DictSeg;
+import com.huaze.shen.dl.lexical.Entity;
+import com.huaze.shen.dl.lexical.ModelLoader;
+import com.huaze.shen.dl.lexical.LexicalAnalyzer;
+import com.huaze.shen.dl.lexical.Word;
+import com.huaze.shen.ml.pos.PosTag;
+import com.huaze.shen.ml.seg.DictSeg;
 
 import java.util.ArrayList;
 import java.util.HashMap;

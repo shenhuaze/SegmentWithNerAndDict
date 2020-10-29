@@ -1,8 +1,8 @@
 package com.huaze.shen;
 
-import ml.dict.triedict.matrix.Matrix2DDictParse;
-import ml.pos.LoadPosProb;
-import ml.pos.PosEnum;
+import com.huaze.shen.ml.dict.triedict.matrix.Matrix2DDictParse;
+import com.huaze.shen.ml.pos.LoadPosProb;
+import com.huaze.shen.ml.pos.PosEnum;
 
 /**
  * @author Huaze Shen
