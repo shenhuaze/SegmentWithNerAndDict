@@ -12,9 +12,9 @@ import ml.pos.PosEnum;
  */
 public class DemoVerifyPosTransitionMatrix {
     public static void main(String[] args) {
-        String dictFilename = "src/main/resources/ml/pos/matrix2d.matrix";
-        String transFile = "src/main/resources/ml/pos/posTransMatrix";
-        String eachFreqFile = "src/main/resources/ml/pos/eachPosTotalFreq.txt";
+        String dictFilename = "src/main/resources/data/pos/matrix2d.matrix";
+        String transFile = "src/main/resources/data/pos/posTransMatrix";
+        String eachFreqFile = "src/main/resources/data/pos/eachPosTotalFreq.txt";
         Matrix2DDictParse parse = new Matrix2DDictParse(dictFilename);
         int numPos = PosEnum.values().length;
         double[][] transProb = new double[numPos][numPos];

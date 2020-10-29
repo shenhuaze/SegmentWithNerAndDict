@@ -14,9 +14,7 @@ import java.util.Map;
  * 加载用户自定义词典
  */
 public class LoadUserDict {
-    //private static final String DICT_PATH = "/nmodels/user_dict.txt";
-    //private static final String DICT_PATH = "/nmodels/test_dict.txt";
-    private static final String DICT_PATH = "src/main/resources/ml/seg/seg_dict.txt";
+    private static final String DICT_PATH = "src/main/resources/data/seg/seg_dict.txt";
 
     public Map<String, Map<String, Integer>> dict;
     public Map<String, Integer> wordFreq;

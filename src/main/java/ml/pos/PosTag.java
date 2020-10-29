@@ -16,7 +16,7 @@ import java.util.Map;
  * 词性标注
  */
 public class PosTag {
-    private static final String MATRIX_FILE = "ml/pos/matrix2d.matrix";
+    private static final String MATRIX_FILE = "data/pos/matrix2d.matrix";
     private Matrix2DDictParse matrixParse;
 
     public PosTag(String path) {
