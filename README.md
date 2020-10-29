@@ -1,0 +1,2 @@
+# SegmentWithNerAndDict
+结合NER和自定义词典的深度学习中文分词
