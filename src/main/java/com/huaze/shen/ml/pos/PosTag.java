@@ -4,6 +4,8 @@ import com.huaze.shen.dl.lexical.Word;
 import com.huaze.shen.ml.dict.triedict.matrix.Matrix2DDictParse;
 import com.huaze.shen.ml.seg.DictSeg;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +20,40 @@ import java.util.Map;
 public class PosTag {
     private static final String MATRIX_FILE = "data/pos/matrix2d.matrix";
     private Matrix2DDictParse matrixParse;
+    private Map<String, Map<String, Integer>> wordPosFreqMap;
+    private Map<String, Map<String, Double>> wordPosProbMap;
 
-    public PosTag(String path) {
-        matrixParse = new Matrix2DDictParse(path + MATRIX_FILE);
+
+    public PosTag(String dir) {
+        matrixParse = new Matrix2DDictParse(dir + MATRIX_FILE);
+        loadDict(dir);
+    }
+
+    public void loadDict(String dir) {
+        this.wordPosFreqMap = new HashMap<>();
+        this.wordPosProbMap = new HashMap<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(dir + "data/seg/CoreNatureDictionary.txt"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] lineSplit = line.split("\\s+");
+                String word = lineSplit[0];
+                Map<String, Integer> posFreq = new HashMap<>();
+                Map<String, Double> posProb = new HashMap<>();
+                for (int i = 1; i < lineSplit.length; i = i + 2) {
+                    String pos = lineSplit[i];
+                    int freq = Integer.parseInt(lineSplit[i + 1]);
+                    posFreq.put(pos, freq);
+                    posProb.put(pos, 1.0);
+                }
+                wordPosFreqMap.put(word, posFreq);
+                wordPosProbMap.put(word, posProb);
+            }
+            br.close();
+        } catch (Exception e) {
+            System.out.println("ERROR!!!读取分词词典失败!");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -105,9 +138,7 @@ public class PosTag {
             String pos = bestRoute[i].toString();
             String wordText = wordList.get(i - 1).getContent();
             try {
-                //String returnLine = DictSeg.reducedTrieParse.searchReturnStringValue(wordText);
-                String returnLine = DictSeg.wordStringMap.get(wordText);
-                if (returnLine == null && nerWords.containsKey(wordText)
+                if (!wordPosProbMap.containsKey(wordText) && nerWords.containsKey(wordText)
                         && nerWords.get(wordText).containsKey(pos)) {
                     wordList.get(i - 1).setPos(pos);
                     wordList.get(i - 1).setPosSubInfo(nerWords.get(wordText).get(pos));
@@ -133,8 +164,8 @@ public class PosTag {
             String textWord = word.getContent();
             Item item = new Item(textWord);
             try {
-                //String returnLine = DictSeg.reducedTrieParse.searchReturnStringValue(textWord);
-                String returnLine = DictSeg.wordStringMap.get(textWord);
+                //String returnLine = wordPosFreqMap.get(textWord);
+                String returnLine = "";
                 if (returnLine != null && nerWords !=null && nerWords.containsKey(textWord)) {
                     item.setCandidateNatures(getPosProb(returnLine, textWord));
                     itemList.add(item);

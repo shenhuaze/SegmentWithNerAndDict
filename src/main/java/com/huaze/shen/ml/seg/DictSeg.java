@@ -1,8 +1,9 @@
 package com.huaze.shen.ml.seg;
 
 import com.huaze.shen.dl.lexical.Word;
-import com.huaze.shen.ml.dict.triedict.parse.ReducedTrieParse;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,17 +16,39 @@ import java.util.Map;
  * 在深度学习分词的基础上，添加用户自定义词典进行分词，分词原理类似于最大概率分词
  */
 public class DictSeg {
-    public static final Integer MAX_WORD_LENGTH = 20;
-    public static ReducedTrieParse reducedTrieParse;
-    public static Map<String, String> wordStringMap;
+    private static final Integer MAX_WORD_LENGTH = 20;
     private int totalFreq;
-    private int vocabSize;
+    private Map<String, Integer> wordFreqMap;
 
-    public DictSeg(String path) {
-        LoadUserDict userDict = new LoadUserDict();
-        wordStringMap = userDict.getReturnString();
-        totalFreq = userDict.totalFreq;
-        vocabSize = userDict.vocabSize;
+    public DictSeg(String dir) {
+        loadDict(dir);
+    }
+
+    public void loadDict(String dir) {
+        this.totalFreq = 0;
+        this.wordFreqMap = new HashMap<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(dir + "data/seg/CoreNatureDictionary.txt"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] lineSplit = line.split("\\s+");
+                String word = lineSplit[0];
+                Map<String, Integer> posFreq = new HashMap<>();
+                int wordFreq = 0;
+                for (int i = 1; i < lineSplit.length; i = i + 2) {
+                    String pos = lineSplit[i];
+                    int freq = Integer.parseInt(lineSplit[i + 1]);
+                    posFreq.put(pos, freq);
+                    wordFreq += freq;
+                }
+                totalFreq += wordFreq;
+                wordFreqMap.put(word, wordFreq);
+            }
+            br.close();
+        } catch (Exception e) {
+            System.out.println("ERROR!!!读取分词词典失败!");
+            e.printStackTrace();
+        }
     }
 
     // 结合深度学习分词 + 深度学习NER + 自定义词典，进行分词
@@ -61,13 +84,11 @@ public class DictSeg {
             String word = str.substring(i, i + 1);
             double weight;
             try {
-                //String returnLine = reducedTrieParse.searchReturnStringValue(word);
-                String returnLine = wordStringMap.get(word);
-                if (returnLine != null) {
-                    weight = getWordWeight(returnLine);
-                } else {
-                    weight = Math.log((1.0 / (totalFreq + vocabSize)));
+                Integer freq = 1;
+                if (wordFreqMap.containsKey(word)) {
+                    freq = wordFreqMap.get(word);
                 }
+                weight = Math.log((1.0 * freq / totalFreq));
                 dag.get(i).put(i, weight);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -78,13 +99,11 @@ public class DictSeg {
             for (Word word: dlSegResult) {
                 double weight;
                 try {
-                    //String returnLine = reducedTrieParse.searchReturnStringValue(word.getContent());
-                    String returnLine = wordStringMap.get(word.getContent());
-                    if (returnLine != null) {
-                        weight = getWordWeight(returnLine);
-                    } else {
-                        weight = Math.log(1.0 / (totalFreq + vocabSize));
+                    Integer freq = 1;
+                    if (wordFreqMap.containsKey(word.getContent())) {
+                        freq = wordFreqMap.get(word.getContent());
                     }
+                    weight = Math.log((1.0 * freq / totalFreq));
                     dag.get(index).put(index + word.getContent().length() - 1, weight);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -96,19 +115,15 @@ public class DictSeg {
             for (int j = i + 1; j < i + MAX_WORD_LENGTH; j++) {
                 if (j < str.length()) {
                     String word = str.substring(i, j + 1);
+                    int freq;
                     double weight;
-                    try {
-                        //String returnLine = reducedTrieParse.searchReturnStringValue(word);
-                        String returnLine = wordStringMap.get(word);
-                        if (returnLine != null) {
-                            weight = getWordWeight(returnLine);
-                            dag.get(i).put(j, weight);
-                        } else if (nerWords != null && nerWords.containsKey(word)) {
-                            weight = Math.log(1.0 / (totalFreq + vocabSize));
-                            dag.get(i).put(j, weight);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (wordFreqMap.containsKey(word)) {
+                        freq = wordFreqMap.get(word);
+                        weight = Math.log((1.0 * freq / totalFreq));
+                        dag.get(i).put(j, weight);
+                    } else if (nerWords != null && nerWords.containsKey(word)) {
+                        weight = Math.log((1.0 / totalFreq));
+                        dag.get(i).put(j, weight);
                     }
                 }
             }
@@ -137,16 +152,5 @@ public class DictSeg {
             route.put(i, candidate);
         }
         return route;
-    }
-
-    private double getWordWeight(String returnLine) {
-        double weight = Double.NEGATIVE_INFINITY;
-        try {
-            String[] lineSplit = returnLine.split("#");
-            weight = Double.parseDouble(lineSplit[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return weight;
     }
 }

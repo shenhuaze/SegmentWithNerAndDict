@@ -127,12 +127,12 @@ public class DemoCombinedSeg {
         System.out.println();
 
         // 词性标注
-        System.out.println("Pos-tagging results:");
-        for (int i = 0; i < docs.size(); i++) {
-            posTag.posTaggingCombinedDL(finalSegResults.get(i), nerWordsList.get(i));
-            //posTag.posTaggingOnlyDict(finalSegResults.get(i));
-            System.out.println(finalSegResults.get(i));
-        }
+        //System.out.println("Pos-tagging results:");
+        //for (int i = 0; i < docs.size(); i++) {
+        //    posTag.posTaggingCombinedDL(finalSegResults.get(i), nerWordsList.get(i));
+        //    //posTag.posTaggingOnlyDict(finalSegResults.get(i));
+        //    System.out.println(finalSegResults.get(i));
+        //}
 
         long t2 = System.currentTimeMillis();
         System.out.println("time cost: " + (t2 - t1));
