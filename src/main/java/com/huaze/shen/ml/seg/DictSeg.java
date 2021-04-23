@@ -28,18 +28,14 @@ public class DictSeg {
         this.totalFreq = 0;
         this.wordFreqMap = new HashMap<>();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(dir + "data/seg/CoreNatureDictionary.txt"));
+            BufferedReader br = new BufferedReader(new FileReader(dir + "data/CoreNatureDictionary.txt"));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] lineSplit = line.split("\\s+");
                 String word = lineSplit[0];
-                Map<String, Integer> posFreq = new HashMap<>();
                 int wordFreq = 0;
                 for (int i = 1; i < lineSplit.length; i = i + 2) {
-                    String pos = lineSplit[i];
-                    int freq = Integer.parseInt(lineSplit[i + 1]);
-                    posFreq.put(pos, freq);
-                    wordFreq += freq;
+                    wordFreq = Integer.parseInt(lineSplit[i + 1]);
                 }
                 totalFreq += wordFreq;
                 wordFreqMap.put(word, wordFreq);

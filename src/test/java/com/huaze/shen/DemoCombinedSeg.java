@@ -51,11 +51,6 @@ public class DemoCombinedSeg {
 
         // 深度学习分词
         List<List<Word>> dlSegResults = lexicalAnalyzer.cut(docs);
-        System.out.println("Deep learning segment results:");
-        for (int i = 0; i < docs.size(); i++) {
-            System.out.println(dlSegResults.get(i));
-        }
-        System.out.println();
 
         // 深度学习进行NER识别，找出每个文本中可能出现的实体新词集合
         List<List<Entity>> entities = lexicalAnalyzer.ner(docs);
@@ -117,6 +112,12 @@ public class DemoCombinedSeg {
         System.out.println();
 
         // 在深度学习分词的基础上，结合NER和词典进行分词
+        System.out.println("Deep learning segment results:");
+        for (int i = 0; i < docs.size(); i++) {
+            System.out.println(dlSegResults.get(i));
+        }
+        System.out.println();
+
         List<List<Word>> finalSegResults = new ArrayList<>();
         System.out.println("Combined segment results:");
         for (int i = 0; i < docs.size(); i++) {
@@ -127,12 +128,12 @@ public class DemoCombinedSeg {
         System.out.println();
 
         // 词性标注
-        //System.out.println("Pos-tagging results:");
-        //for (int i = 0; i < docs.size(); i++) {
-        //    posTag.posTaggingCombinedDL(finalSegResults.get(i), nerWordsList.get(i));
-        //    //posTag.posTaggingOnlyDict(finalSegResults.get(i));
-        //    System.out.println(finalSegResults.get(i));
-        //}
+        System.out.println("Pos-tagging results:");
+        for (int i = 0; i < docs.size(); i++) {
+            posTag.posTaggingCombinedDL(finalSegResults.get(i), nerWordsList.get(i));
+            //posTag.posTaggingOnlyDict(finalSegResults.get(i));
+            System.out.println(finalSegResults.get(i));
+        }
 
         long t2 = System.currentTimeMillis();
         System.out.println("time cost: " + (t2 - t1));

@@ -2,7 +2,6 @@ package com.huaze.shen.ml.pos;
 
 import com.huaze.shen.dl.lexical.Word;
 import com.huaze.shen.ml.dict.triedict.matrix.Matrix2DDictParse;
-import com.huaze.shen.ml.seg.DictSeg;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -23,7 +22,6 @@ public class PosTag {
     private Map<String, Map<String, Integer>> wordPosFreqMap;
     private Map<String, Map<String, Double>> wordPosProbMap;
 
-
     public PosTag(String dir) {
         matrixParse = new Matrix2DDictParse(dir + MATRIX_FILE);
         loadDict(dir);
@@ -33,7 +31,7 @@ public class PosTag {
         this.wordPosFreqMap = new HashMap<>();
         this.wordPosProbMap = new HashMap<>();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(dir + "data/seg/CoreNatureDictionary.txt"));
+            BufferedReader br = new BufferedReader(new FileReader(dir + "data/CoreNatureDictionary.txt"));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] lineSplit = line.split("\\s+");
