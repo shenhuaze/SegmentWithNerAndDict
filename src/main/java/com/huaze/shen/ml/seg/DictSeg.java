@@ -12,7 +12,7 @@ import java.util.Map;
  * @author Huaze Shen
  * @date 2020-10-29
  *
- * 在深度学习分词的基础上，添加用户自定义词典进行分词，分词原理类似于最大概率分词，不过这里每个词的权重不仅与词频有关，还与词长有关
+ * 在深度学习分词的基础上，添加用户自定义词典进行分词，分词原理类似于最大概率分词
  */
 public class DictSeg {
     public static final Integer MAX_WORD_LENGTH = 20;
@@ -66,7 +66,7 @@ public class DictSeg {
                 if (returnLine != null) {
                     weight = getWordWeight(returnLine);
                 } else {
-                    weight = Math.log((1.0 * word.length() / (totalFreq + vocabSize)));
+                    weight = Math.log((1.0 / (totalFreq + vocabSize)));
                 }
                 dag.get(i).put(i, weight);
             } catch (Exception e) {
@@ -83,7 +83,7 @@ public class DictSeg {
                     if (returnLine != null) {
                         weight = getWordWeight(returnLine);
                     } else {
-                        weight = Math.log(1.0 * word.getContent().length() / (totalFreq + vocabSize));
+                        weight = Math.log(1.0 / (totalFreq + vocabSize));
                     }
                     dag.get(index).put(index + word.getContent().length() - 1, weight);
                 } catch (Exception e) {
@@ -104,7 +104,7 @@ public class DictSeg {
                             weight = getWordWeight(returnLine);
                             dag.get(i).put(j, weight);
                         } else if (nerWords != null && nerWords.containsKey(word)) {
-                            weight = Math.log(1.0 * word.length() / (totalFreq + vocabSize));
+                            weight = Math.log(1.0 / (totalFreq + vocabSize));
                             dag.get(i).put(j, weight);
                         }
                     } catch (Exception e) {
